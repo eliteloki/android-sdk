@@ -1,3 +1,6 @@
+group 'io.hasura'
+version '0.1.0'
+
 buildscript {
     repositories {
         mavenCentral()
@@ -37,4 +40,14 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.2.1'
     compile 'com.google.code.gson:gson:2.6'
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
+}
+
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('repo'))
+        }
+    }
 }

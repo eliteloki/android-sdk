@@ -1,3 +1,6 @@
+group 'io.hasura'
+version '0.1.0'
+
 buildscript {
     repositories {
         mavenCentral()
@@ -39,4 +42,14 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.2.0'
     compile 'com.squareup.okhttp3:okhttp-urlconnection:3.2.0'
     compile project (':core')
+}
+
+apply plugin: 'maven'
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: uri('repo'))
+        }
+    }
 }
