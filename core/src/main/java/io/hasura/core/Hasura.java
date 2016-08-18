@@ -1,5 +1,7 @@
 package io.hasura.core;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -24,17 +26,22 @@ public class Hasura {
     private static Context context;
     private static String sAuthUrl,sDBUrl;
     private static String userRole = "";
+    private static String userToken = "";
     private static OkHttpClient okHttpClient;
+    private static OkHttpClient.Builder okHttpBuilder;
     private static SharedPreferences cookiePrefs;
     private static String hasuraSharedPref = "io.hasura.shared.pref";
     private static String hasuraSharedPrefUserId = "io.hasura.shared.pref.userId";
+    private static String hasuraSharedPrefUserToken = "io.hasura.shared.pref.hasuraSharedPrefUserToken";
     public static void init(Context mContext,String authUrl,String dbUrl) {
         context = mContext;
+        okHttpBuilder = buildOkHttpClientBuilder();
+        okHttpClient = okHttpBuilder.build();
         cookiePrefs = context.getSharedPreferences(hasuraSharedPref, Context.MODE_PRIVATE);
-        auth = getAuth();
-        db = getDB();
         sAuthUrl = authUrl;
         sDBUrl = dbUrl;
+        auth = getAuth();
+        db = getDB();
     }
 
     public static Integer getUserId() {
@@ -47,6 +54,16 @@ public class Hasura {
         prefsWriter.commit();
     }
 
+    public static void setUserToken(String userToken) {
+        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
+        prefsWriter.putString(hasuraSharedPrefUserToken,userToken);
+        prefsWriter.commit();
+    }
+
+    public static String getUserToken() {
+        return cookiePrefs.getString(hasuraSharedPrefUserToken,"");
+    }
+
     public static String getUserRole() {
         return userRole;
     }
@@ -57,26 +74,29 @@ public class Hasura {
 
     public static OkHttpClient.Builder buildOkHttpClientBuilder() {
         OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
-                .cookieJar(new JavaNetCookieJar(new CookieManager(
-                        new PersistentCookieStore(context), CookiePolicy.ACCEPT_ALL)))
+//                .cookieJar(new JavaNetCookieJar(new CookieManager(
+//                        new PersistentCookieStore(context), CookiePolicy.ACCEPT_ALL)))
+                .addInterceptor(new HasuraTokenInterceptor())
                 .addInterceptor(new LoggingInterceptor());
         return okHttpClientBuilder;
     }
 
     public static DBService getDB() {
-            okHttpClient = buildOkHttpClientBuilder().build();
-            db = new DBService(sDBUrl, "", okHttpClient);
+        if(db == null) {
+            db = new DBService(sDBUrl, "", getAuth().getClient());
+        }
         return db;
     }
 
     public static DBService getDBAsRole(String userRole) {
-            okHttpClient = buildOkHttpClientBuilder().addInterceptor(new HasuraTokenInterceptor(userRole))
+            okHttpClient = okHttpBuilder.addInterceptor(new HasuraTokenInterceptor())
                     .build();
             db = new DBService(sDBUrl, "", okHttpClient);
         return db;
     }
 
     public static void clearCookies() {
+        setUserToken("");
         new PersistentCookieStore(context).removeAll();
     }
 
@@ -89,13 +109,14 @@ public class Hasura {
     }
 
     public static AuthService getAuth() {
-            okHttpClient = buildOkHttpClientBuilder().build();
+        if(auth == null) {
             auth = new AuthService(sAuthUrl, okHttpClient);
+        }
         return auth;
     }
 
     public static AuthService getAuthAsRole(String userRole) {
-            okHttpClient = buildOkHttpClientBuilder().addInterceptor(new HasuraTokenInterceptor(userRole))
+            okHttpClient = okHttpBuilder.addInterceptor(new HasuraTokenInterceptor())
                     .build();
             auth = new AuthService(sAuthUrl, okHttpClient);
         return auth;

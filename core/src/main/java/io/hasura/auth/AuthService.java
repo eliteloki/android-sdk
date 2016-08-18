@@ -9,6 +9,10 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 
 import io.hasura.core.Call;
+import io.hasura.core.Hasura;
+import io.hasura.core.LoginCall;
+import io.hasura.core.LogoutCall;
+import io.hasura.core.RegisterCall;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -58,6 +62,39 @@ public class AuthService {
         return newCall;
     }
 
+    private <T> RegisterCall<T, AuthException> mkRegisterCall(String url, String jsonBody, Type bodyType) {
+        RequestBody reqBody = RequestBody.create(JSON, jsonBody);
+        Request request = new Request.Builder()
+                .url(this.authUrl + url)
+                .post(reqBody)
+                .build();
+        RegisterCall<T, AuthException> newCall
+                = new RegisterCall<T, AuthException>(
+                httpClient.newCall(request), new AuthResponseConverter<T>(bodyType));
+        return newCall;
+    }
+    private <T> LoginCall<T, AuthException> mkLoginCall(String url, String jsonBody, Type bodyType) {
+        RequestBody reqBody = RequestBody.create(JSON, jsonBody);
+        Request request = new Request.Builder()
+                .url(this.authUrl + url)
+                .post(reqBody)
+                .build();
+        LoginCall<T, AuthException> newCall
+                = new LoginCall<T, AuthException>(
+                httpClient.newCall(request), new AuthResponseConverter<T>(bodyType));
+        return newCall;
+    }
+
+    private <T> LogoutCall<T, AuthException> mkLogoutCall(String url, Type bodyType) {
+        Request request = new Request.Builder()
+                .url(this.authUrl + url)
+                .build();
+        LogoutCall<T, AuthException> newCall
+                = new LogoutCall<T, AuthException>(
+                httpClient.newCall(request), new AuthResponseConverter<T>(bodyType));
+        return newCall;
+    }
+
     private <T> Call<T, AuthException> mkGetCall(String url, Type bodyType) {
         Request request = new Request.Builder()
                 .url(this.authUrl + url)
@@ -75,11 +112,11 @@ public class AuthService {
      * @return  the {@link RegisterResponse}
      * @throws AuthException
      */
-    public Call<RegisterResponse, AuthException> register(RegisterRequest r) {
+    public RegisterCall<RegisterResponse, AuthException> register(RegisterRequest r) {
         String jsonBody = gson.toJson(r);
         Type respType = new TypeToken<RegisterResponse>() {
         }.getType();
-        return mkPostCall("/signup", jsonBody, respType);
+        return mkRegisterCall("/signup", jsonBody, respType);
     }
 
     /**
@@ -91,11 +128,11 @@ public class AuthService {
      * @return  the {@link LoginResponse}
      * @throws AuthException
      */
-    public Call<LoginResponse, AuthException> login(LoginRequest r) {
+    public LoginCall<LoginResponse, AuthException> login(LoginRequest r) {
         String jsonBody = gson.toJson(r);
         Type respType = new TypeToken<LoginResponse>() {
         }.getType();
-        return mkPostCall("/login", jsonBody, respType);
+        return mkLoginCall("/login", jsonBody, respType);
     }
 
     /**
@@ -109,7 +146,7 @@ public class AuthService {
      * @return the {@link LoginResponse}
      * @throws AuthException
      */
-    public Call<LoginResponse, AuthException> login(
+    public LoginCall<LoginResponse, AuthException> login(
             String userName, String password) {
         return this.login(new LoginRequest(userName, password));
     }
@@ -120,10 +157,10 @@ public class AuthService {
      * @return a {@link LogoutResponse} type
      * @throws AuthException
      */
-    public Call<LogoutResponse, AuthException> logout() {
+    public LogoutCall<LogoutResponse, AuthException> logout() {
         Type respType = new TypeToken<LogoutResponse>() {
         }.getType();
-        return mkGetCall("/user/logout", respType);
+        return mkLogoutCall("/user/logout", respType);
     }
 
     /**

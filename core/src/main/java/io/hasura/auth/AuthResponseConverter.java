@@ -45,7 +45,7 @@ public class AuthResponseConverter<T> implements Converter<T, AuthException> {
                         errCode = AuthError.UNEXPECTED_CODE;
                         break;
                 }
-                throw new AuthException(errCode, err.getMessage());
+                throw new AuthException(errCode, err.getMessage(),err.getErrorCode());
             }
         } catch (HasuraJsonException e) {
             throw new AuthException(AuthError.INTERNAL_ERROR, e);
@@ -64,7 +64,12 @@ public class AuthResponseConverter<T> implements Converter<T, AuthException> {
 
     static class AuthErrorResponse {
         private int code;
+        private String error_code;
         private String message;
+
+        public String getErrorCode() {
+            return error_code;
+        }
 
         public int getCode() {
             return this.code;
