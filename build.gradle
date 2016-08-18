@@ -12,6 +12,7 @@ repositories {
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.4'
+    compile 'com.github.plecong:hogan-groovy:3.0'
     testCompile group: 'junit', name: 'junit', version: '4.11'
     compile gradleApi()
     compile localGroovy()

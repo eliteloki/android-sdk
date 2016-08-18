@@ -370,7 +370,7 @@ public class GenerationUtil {
                 recordsDir.mkdir();
             }
         } else {
-            dbDir.mkdir();
+            dbDir.mkdirs();
             /* Create dir/tables, dir/tables/records directories */
             tablesDir.mkdir();
             recordsDir.mkdir();
