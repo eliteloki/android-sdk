@@ -1,4 +1,4 @@
-include ':core', ':auth', ':db', ':db-codegen'
+include ':core', ':db-codegen'
 rootProject.name = 'and-sdk'
 //include 'db'
 //include 'db-codegen'
