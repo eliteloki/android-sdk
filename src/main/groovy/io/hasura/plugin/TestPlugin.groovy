@@ -42,7 +42,7 @@ class TestPlugin implements Plugin<Project> {
 
         def codegenTask = target.tasks.create('codegen').dependsOn(dbCodegenTask) << {
             // copy the build.gradle file
-            def gradleContents = loader.getResource('build.gradle.mustache').getText()
+            def gradleContents = loader.getResource('dev.build.gradle.mustache').getText()
             def destGradleFile = new File(target.projectDir.absolutePath, projectName + '/build.gradle')
             destGradleFile.parentFile.mkdirs()
             destGradleFile.write(gradleContents)
