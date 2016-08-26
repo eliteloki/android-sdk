@@ -9,6 +9,14 @@ sourceCompatibility = 1.5
 repositories {
     mavenCentral()
 }
+buildscript{
+    repositories {
+        mavenCentral()
+    }
+    dependencies{
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:1.4.1'
+    }
+}
 
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.4'
@@ -20,7 +28,8 @@ dependencies {
     compile project ('core')
 }
 
-apply plugin: 'maven'
+//apply plugin: 'maven'
+apply plugin: 'com.github.dcendents.android-maven'
 
 uploadArchives {
     repositories {
