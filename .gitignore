@@ -10,4 +10,5 @@ auth/auth.iml
 core/core.iml
 db-codegen/db-codegen.iml
 db/db.iml
-#Would skip repository example-hasura--todo-project/
+auth/
+db/
