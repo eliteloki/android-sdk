@@ -1,5 +1,14 @@
 build
 .idea
+.gradle
 out
 local.properties
-**/repo/
+repo/
+.gradle/2.14.1/
+and-sdk.iml
+auth/auth.iml
+core/core.iml
+db-codegen/db-codegen.iml
+db/db.iml
+auth/
+db/
