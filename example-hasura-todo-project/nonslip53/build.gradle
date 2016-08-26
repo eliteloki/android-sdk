@@ -32,7 +32,7 @@ android {
 
 repositories {
     mavenCentral()
-    maven { url uri('/Users/34crossandriod/Documents/Android Repository/sdk/android-sdk/core/repo') }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -40,5 +40,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile 'com.google.code.gson:gson:2.6'
-    compile 'io.hasura:core:0.1.0'
+    compile 'com.github.hasura:android-sdk:e99667ce4a'
+//    compile 'io.hasura:core:e99667ce4a'
 }
