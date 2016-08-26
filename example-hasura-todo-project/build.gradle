@@ -9,7 +9,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0-beta2'
-        classpath 'com.github.hasura:android-sdk:e99667ce4a'
+        classpath 'com.github.hasura:android-sdk:40e2c5dc1d'
 
 //        classpath 'io.hasura:and-sdk:e99667ce4a'
 //        classpath 'io.hasura:core:e99667ce4a'

@@ -28,11 +28,11 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.github.hasura:android-sdk:e99667ce4a'
+    compile 'com.github.hasura:android-sdk:40e2c5dc1d'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile  'com.android.support:design:+'
     testCompile 'junit:junit:4.12'
 //    compile 'io.hasura:core:e99667ce4a'
 
-    compile project(':nonslip53')
+//    compile project(':nonslip53')
 }
