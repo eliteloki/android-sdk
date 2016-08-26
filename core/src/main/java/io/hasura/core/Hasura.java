@@ -5,11 +5,30 @@ import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.TextView;
+
+import com.facebook.AccessToken;
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.FacebookSdk;
+import com.facebook.GraphRequest;
+import com.facebook.GraphResponse;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.net.CookieManager;
 import java.net.CookiePolicy;
+import java.util.Arrays;
 
+import io.hasura.auth.AuthException;
 import io.hasura.auth.AuthService;
+import io.hasura.auth.SocialLoginRequest;
+import io.hasura.auth.SocialLoginResponse;
 import io.hasura.core.LoggingInterceptor;
 import io.hasura.core.PersistentCookieStore;
 import io.hasura.db.DBService;
@@ -30,9 +49,13 @@ public class Hasura {
     private static OkHttpClient okHttpClient;
     private static OkHttpClient.Builder okHttpBuilder;
     private static SharedPreferences cookiePrefs;
+    private static CallbackManager callbackManager;
     private static String hasuraSharedPref = "io.hasura.shared.pref";
     private static String hasuraSharedPrefUserId = "io.hasura.shared.pref.userId";
     private static String hasuraSharedPrefUserToken = "io.hasura.shared.pref.hasuraSharedPrefUserToken";
+    public static String FACEBOOK_NAME = "io.hasura.FACEBOOK_NAME";
+    public static String TAG = "HASURA";
+    public static String FACEBOOK_ACCESS_TOKEN = "io.hasura.FACEBOOK_ACCESS_TOKEN";
     public static void init(Context mContext,String authUrl,String dbUrl) {
         context = mContext;
         okHttpBuilder = buildOkHttpClientBuilder();
@@ -42,6 +65,7 @@ public class Hasura {
         sDBUrl = dbUrl;
         auth = getAuth();
         db = getDB();
+        FacebookSdk.sdkInitialize(context);
     }
 
     public static Integer getUserId() {
@@ -54,10 +78,24 @@ public class Hasura {
         prefsWriter.commit();
     }
 
+    public static CallbackManager getFacebookCallBackManager(){
+        return callbackManager;
+    }
+
     public static void setUserToken(String userToken) {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(hasuraSharedPrefUserToken,userToken);
         prefsWriter.commit();
+    }
+
+    public static void setFBToken(String userToken) {
+        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
+        prefsWriter.putString(FACEBOOK_ACCESS_TOKEN,userToken);
+        prefsWriter.commit();
+    }
+
+    public static String getFBToken() {
+        return cookiePrefs.getString(FACEBOOK_ACCESS_TOKEN,"");
     }
 
     public static String getUserToken() {
@@ -122,6 +160,31 @@ public class Hasura {
         return auth;
     }
 
+
+    private static void fbLogin(Activity context, final Callback<SocialLoginResponse, AuthException>  socialCall) {
+        callbackManager = CallbackManager.Factory.create();
+        // Set permissions
+        LoginManager.getInstance().logInWithReadPermissions(context, Arrays.asList("email","user_photos","public_profile"));
+        LoginManager.getInstance().registerCallback(callbackManager,new FacebookCallback<LoginResult>() {
+            @Override
+            public void onSuccess(LoginResult loginResult) {
+                getAuth().socialAuth(new SocialLoginRequest("Facebook",
+                        loginResult.getAccessToken().getToken())).enqueue(socialCall);
+            }
+
+            @Override
+            public void onCancel() {
+                Log.d(getClass()
+                        .getSimpleName(),"On cancel");
+            }
+
+            @Override
+            public void onError(FacebookException error) {
+                Log.d(getClass()
+                        .getSimpleName(),error.toString());
+            }
+        });
+    }
 
 
 }

@@ -13,6 +13,7 @@ import io.hasura.core.Hasura;
 import io.hasura.core.LoginCall;
 import io.hasura.core.LogoutCall;
 import io.hasura.core.RegisterCall;
+import io.hasura.core.SocialCall;
 import okhttp3.JavaNetCookieJar;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -81,6 +82,15 @@ public class AuthService {
                 .build();
         LoginCall<T, AuthException> newCall
                 = new LoginCall<T, AuthException>(
+                httpClient.newCall(request), new AuthResponseConverter<T>(bodyType));
+        return newCall;
+    }
+    private <T> SocialCall<T, AuthException> mkLoginCall(String url, Type bodyType) {
+        Request request = new Request.Builder()
+                .url(this.authUrl + url)
+                .build();
+        SocialCall<T, AuthException> newCall
+                = new SocialCall<T, AuthException>(
                 httpClient.newCall(request), new AuthResponseConverter<T>(bodyType));
         return newCall;
     }
@@ -379,11 +389,11 @@ public class AuthService {
      * @return  {@link SocialLoginResponse}
      * @throws AuthException
      */
-    public Call<SocialLoginResponse, AuthException> socialAuth(SocialLoginRequest r) {
+    public SocialCall<SocialLoginResponse, AuthException> socialAuth(SocialLoginRequest r) {
         // the URL is prepared inside the request class
         String url = r.prepareRequestURL();
         Type respType = new TypeToken<SocialLoginResponse>() {
         }.getType();
-        return mkGetCall(url, respType);
+        return mkLoginCall(url, respType);
     }
 }
