@@ -34,5 +34,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
 //    compile 'com.github.hasura.android-sdk:core:c1b3bca'
 
-    compile project(':nonslip53')
+//    compile project(':nonslip53')
 }
