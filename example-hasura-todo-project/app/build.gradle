@@ -28,7 +28,10 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    compile 'com.github.hasura:android-sdk:c1b3bca'
+    compile('com.github.hasura.android-sdk:core:master-SNAPSHOT@aar') {
+        transitive = true
+    }
+//    compile 'com.github.hasura:android-sdk:master-SNAPSHOT'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile  'com.android.support:design:+'
     testCompile 'junit:junit:4.12'
