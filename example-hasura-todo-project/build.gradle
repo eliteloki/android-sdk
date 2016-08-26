@@ -5,9 +5,7 @@ apply plugin: 'io.hasura.plugin.hasuraplugin'
 buildscript {
     repositories {
         jcenter()
-        maven { url uri("/Users/34crossandriod/Documents/Android Repository/sdk/android-sdk/repo") }
-        maven { url uri("/Users/34crossandriod/Documents/Android Repository/sdk/android-sdk/core/repo") }
-        maven { url uri("/Users/34crossandriod/Documents/Android Repository/sdk/android-sdk/db-codegen/repo") }
+        maven { url "https://jitpack.io" }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.2.0-beta2'
