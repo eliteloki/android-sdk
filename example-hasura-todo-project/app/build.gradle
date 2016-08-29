@@ -29,11 +29,9 @@ dependencies {
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    compile 'com.github.hasura.android-sdk:core:5f19273@aar'
-    compile ('com.github.hasura:android-sdk:5f19273') {
-        exclude module:'core'
-    }
+    compile 'com.github.hasura.android-sdk:build:0.1.0'
+    compile 'com.github.hasura.android-sdk:core:0.1.0@aar'
+    compile 'com.github.hasura.android-sdk:db-codegen:0.1.0'
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.android.support:appcompat-v7:23.2.0'
     compile 'com.android.support:design:+'
