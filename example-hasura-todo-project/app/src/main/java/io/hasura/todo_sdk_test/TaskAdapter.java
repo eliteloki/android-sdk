@@ -16,7 +16,11 @@ import io.hasura.nonslip53.data.tables.records.TaskRecord;
 public class TaskAdapter extends ArrayAdapter<TaskRecord> {
 	private Context mContext;
 	private List<TaskRecord> mTasks;
-	
+    /**
+     *
+     * @param context to get the activity context
+     * @param objects to get the TaskRecords
+     */
 	public TaskAdapter(Context context, List<TaskRecord> objects) {
 		super(context, R.layout.task_row_item, objects);
 		this.mContext = context;
@@ -32,9 +36,11 @@ public class TaskAdapter extends ArrayAdapter<TaskRecord> {
 		TaskRecord task = mTasks.get(position);
 		
 		TextView descriptionView = (TextView) convertView.findViewById(R.id.task_description);
-		
-		descriptionView.setText(task.title);
-		
+
+		descriptionView.setText(task.title); // set title from the taskrecord
+
+        // if the task is completed then strike through
+        // else don't strike through
 		if(task.isCompleted){
 			descriptionView.setPaintFlags(descriptionView.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
 		}else{

@@ -42,6 +42,11 @@ public class RegisterActivity extends Activity {
         return true;
     }
 
+    /**
+     * Method used to make register call.
+     * @param v view passed fro xml.
+     * @link https://hasura.io/_docs/auth/3.0/basics.html#registration
+     */
     public void register(final View v) {
         if (mUsernameField.getText().length() == 0 || mPasswordField.getText().length() == 0) {
             mErrorField.setText("username/password can't be empty");
@@ -53,14 +58,24 @@ public class RegisterActivity extends Activity {
         String password = mPasswordField.getText().toString();
 
         mErrorField.setText("");
-        Hasura.clearCookies();
-
+        Hasura.clearSession();
+        // RegisterRequest is the request model for register call.
         RegisterRequest rr = new RegisterRequest();
         rr.setUsername(userName);
         rr.setPassword(password);
+        /**
+         * Registration On Success an additional db query is being made to add the User is and user name in the USER table.
+         */
         Hasura.getAuth().register(rr).enqueue(new Callback<RegisterResponse, AuthException>() {
             @Override
             public void onSuccess(final RegisterResponse registerResponse) {
+                /**
+                 * Hasura.getDB() will get the DB Service for your application.
+                 * Session for DB and Auth are maintained by the SDK.
+                 * DB Service supports select,insert,update and delete.
+                 * query.build().execute() will build your query and run it in background thread.
+                 * @link https://hasura.io/_docs/data/0.7/quickstart.html#inserting-data
+                 */
                 InsertQuery<UserRecord> query
                         = Hasura.getDB().insert(Tables.USER)
                         .set(Tables.USER.ID, registerResponse.getHasuraId())
@@ -72,6 +87,9 @@ public class RegisterActivity extends Activity {
                     finish();
 
                 } catch (final DBException e) {
+                    /**
+                     * runOnUiThread() can be used in the event that are using the enqueue() or execute() to make a request.
+                     */
                     runOnUiThread(new Runnable() {
                         public void run() {
                             String errMsg = e.getCode().toString() + " : " + e.getLocalizedMessage();
@@ -95,6 +113,10 @@ public class RegisterActivity extends Activity {
         });
     }
 
+    /**
+     * Method will start Login page
+     * @param v view passed from xml
+     */
     public void showLogin(View v) {
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);

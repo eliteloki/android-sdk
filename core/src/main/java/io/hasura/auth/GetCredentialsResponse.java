@@ -16,6 +16,27 @@ public class GetCredentialsResponse {
     @SerializedName("auth_token")
     String auth_token;
 
+    @SerializedName("mobile")
+    String mobile;
+
+    @SerializedName("email")
+    String email;
+
+    @SerializedName("username")
+    String username;
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
     public int getHasuraId() {
         return hasuraId;
     }

@@ -1,9 +1,11 @@
 package io.hasura.todo_sdk_test;
 
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.graphics.Paint;
 import android.os.Bundle;
+import android.support.v4.content.IntentCompat;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -18,11 +20,13 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.hasura.auth.AuthError;
 import io.hasura.auth.AuthException;
 import io.hasura.auth.LogoutResponse;
 import io.hasura.core.Callback;
 import io.hasura.core.Hasura;
 import io.hasura.core.PersistentCookieStore;
+import io.hasura.db.DBError;
 import io.hasura.db.DBException;
 import io.hasura.db.InsertQuery;
 import io.hasura.db.InsertResult;
@@ -70,6 +74,9 @@ public class TodoActivity extends Activity implements OnItemClickListener {
 
 	}
 
+    /**
+     * UpdateData will fetch the list of columns provided in columns() method and set the data in the Task adapter.
+     */
 	public void updateData(){
         Log.i(getClass().getSimpleName(),"Todo before"+String.valueOf(new PersistentCookieStore(TodoActivity.this).getCookies()));
         SelectQuery<TaskRecord> q
@@ -96,6 +103,13 @@ public class TodoActivity extends Activity implements OnItemClickListener {
         });
 	}
 
+    /**
+     * createTask() will add a new task in the user's TASK table.
+     * TITLE, DESCRIPTION, IS_COMPLETED, USER_ID are the Task table column name.
+     * returning() will return the ID, TITLE, IS_COMPLETED from the TASK table.
+     * @link https://hasura.io/_docs/data/0.7/quickstart.html#inserting-data.
+     * @param v view passed form xml.
+     */
 	public void createTask(View v) {
 		if (mTaskInput.getText().length() > 0){
             Log.d("user_id_insert", Hasura.getUserId().toString());
@@ -120,7 +134,9 @@ public class TodoActivity extends Activity implements OnItemClickListener {
 
                 @Override
                 public void onFailure(DBException e) {
-                    // Where to show this?
+                    if(e.getCode().equals(DBError.INVALID_SESSION)){
+                        HasuraUtils.Relogin(TodoActivity.this);
+                    }
                 }
             });
 		}
@@ -139,13 +155,17 @@ public class TodoActivity extends Activity implements OnItemClickListener {
 		}
 		return false;
 	}
+
+    /**
+     * logout will make a request to log out a currently logged in user.
+     * Redirected to Login page On Success
+     */
     private void logout(){
         Hasura.getAuth().logout().enqueue(new Callback<LogoutResponse, AuthException>() {
             @Override
             public void onSuccess(LogoutResponse response) {
                 runOnUiThread(new Runnable() {
                     public void run() {
-//                            Hasura.unsetUserId();
                         Intent intent = new Intent(TodoActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
@@ -155,7 +175,12 @@ public class TodoActivity extends Activity implements OnItemClickListener {
 
             @Override
             public void onFailure(AuthException e) {
-                // FIXME: what to do on logout failure?
+                /**
+                 * If the session is invalid then clear the User token and restart the activity task.
+                 */
+                if(e.getCode().equals(AuthError.INVALID_SESSION)){
+                    HasuraUtils.Relogin(TodoActivity.this);
+                }
             }
         });
     }
@@ -173,6 +198,9 @@ public class TodoActivity extends Activity implements OnItemClickListener {
 			taskDescription.setPaintFlags(taskDescription.getPaintFlags() & (~Paint.STRIKE_THRU_TEXT_FLAG));
 		}
 
+        /**
+         * Will update the task to completed from incomplete or vice versa based on the available data.
+         */
         UpdateQuery<TaskRecord> q =
                 Hasura.getDB().update(Tables.TASK)
                 .set(Tables.TASK.IS_COMPLETED, task.isCompleted)
@@ -186,7 +214,9 @@ public class TodoActivity extends Activity implements OnItemClickListener {
 
             @Override
             public void onFailure(DBException e) {
-                // Update failed? Revert?
+                if(e.getCode().equals(DBError.INVALID_SESSION)){
+                    HasuraUtils.Relogin(TodoActivity.this);
+                }
             }
         });
 	}

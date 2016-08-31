@@ -24,13 +24,11 @@ public class LoginActivity extends Activity {
 	private EditText mPasswordField;
 	private TextView mErrorField;
 	SharedPreferences.Editor editor;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		editor  = PreferenceManager.getDefaultSharedPreferences(LoginActivity.this).edit();
-		Log.i(getClass().getSimpleName(), String.valueOf(new PersistentCookieStore(LoginActivity.this).getCookies()));
 		mUsernameField = (EditText) findViewById(R.id.login_username);
 		mPasswordField = (EditText) findViewById(R.id.login_password);
 		mErrorField = (TextView) findViewById(R.id.error_messages);
@@ -43,17 +41,29 @@ public class LoginActivity extends Activity {
 		return true;
 	}
 
+	/**
+	 *
+	 * @param v view passed from xml.
+     * Method will make a request to Hasura Login service.
+     */
 	public void signIn(final View v) {
         v.setEnabled(false);
         String userName = mUsernameField.getText().toString().trim();
         String password = mPasswordField.getText().toString().trim();
-        Hasura.clearCookies();
+        Hasura.clearSession(); // clearSession() will clear any previous sessions from mobile
+        /**
+         * Hasura.getAuth() will get the Authservice for your application.
+         * Hasura.getAuth().login() will get the login call available inside the sdk.
+         * By default Hasura sdk handles the session for you and maintains a state to check if the user is logged in.
+         * loginCall.enqueueOnUIThread() is used to make the request and make UI changes in UI thread.
+         * loginCall.enqueue() is used in case you would like to make additional request in success or
+         * failure case depending on your scenario
+         * @link https://hasura.io/_docs/auth/3.0/basics.html#login
+         */
         LoginCall<LoginResponse, AuthException> loginCall = Hasura.getAuth().login(userName, password);
         loginCall.enqueueOnUIThread(new Callback<LoginResponse, AuthException>() {
             @Override
             public void onSuccess(final LoginResponse response) {
-				editor.putBoolean("io.hasura.LoginCheck",true);
-                editor.commit();
                 Intent intent = new Intent(LoginActivity.this, TodoActivity.class);
                 startActivity(intent);
                 finish();
@@ -68,6 +78,10 @@ public class LoginActivity extends Activity {
         });
     }
 
+    /**
+     * Method used to show Registration page.
+     * @param v view passed from xml.
+     */
 	public void showRegistration(View v) {
 		Intent intent = new Intent(this, RegisterActivity.class);
 		startActivity(intent);
