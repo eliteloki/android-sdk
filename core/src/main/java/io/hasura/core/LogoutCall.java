@@ -59,7 +59,7 @@ public class LogoutCall<T, E extends Exception> {
 
             private void callSuccess(T response) {
                 try {
-                    Hasura.clearCookies();
+                    Hasura.clearSession();
                     callback.onSuccess(response);
                 } catch (Throwable t) {
                     t.printStackTrace();
@@ -110,7 +110,7 @@ public class LogoutCall<T, E extends Exception> {
                     @Override
                     public void run() {
                         try {
-                            Hasura.clearCookies();
+                            Hasura.clearSession();
                             callback.onSuccess(response);
                         } catch (Throwable t) {
                             t.printStackTrace();

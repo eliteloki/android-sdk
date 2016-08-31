@@ -1,4 +1,4 @@
-package com.elite.todo_sdk_test;
+package io.hasura.todo_sdk_test;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getTargetContext();
 
-        assertEquals("com.elite.todo_sdk_test", appContext.getPackageName());
+        assertEquals("io.hasura.todo_sdk_test", appContext.getPackageName());
     }
 }

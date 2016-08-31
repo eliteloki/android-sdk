@@ -1,4 +1,4 @@
-package com.elite.todo_sdk_test;
+package io.hasura.todo_sdk_test;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -52,8 +52,7 @@ public class LoginActivity extends Activity {
         loginCall.enqueueOnUIThread(new Callback<LoginResponse, AuthException>() {
             @Override
             public void onSuccess(final LoginResponse response) {
-				Log.i(getClass().getSimpleName(),String.valueOf(new PersistentCookieStore(LoginActivity.this).getCookies()));
-				editor.putBoolean("com.elite.todo_sdk_test.LoginCheck",true);
+				editor.putBoolean("io.hasura.LoginCheck",true);
                 editor.commit();
                 Intent intent = new Intent(LoginActivity.this, TodoActivity.class);
                 startActivity(intent);

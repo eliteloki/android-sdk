@@ -126,6 +126,7 @@ public class LoginCall<T, E extends Exception> {
     public void setUserDetails(T response){
         LoginResponse loginResponse = (LoginResponse) response;
         Hasura.setUserToken(loginResponse.getSessionId());
+        Hasura.setLogin();
         Hasura.setUserId(loginResponse.getHasuraId());
     }
 

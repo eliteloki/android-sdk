@@ -1,4 +1,4 @@
-package com.elite.todo_sdk_test;
+package io.hasura.todo_sdk_test;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import io.hasura.todo_sdk_test.LoginActivity;
 
 public class SplashScreenActivity extends AppCompatActivity {
 
@@ -16,8 +18,8 @@ public class SplashScreenActivity extends AppCompatActivity {
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                if(PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this).getBoolean("com.elite.todo_sdk_test.LoginCheck",false)){
-                    startActivity(new Intent(SplashScreenActivity.this,TodoActivity.class));
+                if(PreferenceManager.getDefaultSharedPreferences(SplashScreenActivity.this).getBoolean("io.hasura.LoginCheck",false)){
+                    startActivity(new Intent(SplashScreenActivity.this, TodoActivity.class));
                 }else {
                     startActivity(new Intent(SplashScreenActivity.this,LoginActivity.class));
                 }

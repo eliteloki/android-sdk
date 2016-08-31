@@ -126,6 +126,7 @@ public class RegisterCall<T, E extends Exception> {
     private void setUserDetails(T response){
         RegisterResponse registerResponse = (RegisterResponse) response;
         Hasura.setUserToken(registerResponse.getSessionId());
+        Hasura.setLogin();
         Hasura.setUserId(registerResponse.getHasuraId());
     }
 

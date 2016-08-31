@@ -33,6 +33,7 @@ public class Hasura {
     private static String hasuraSharedPref = "io.hasura.shared.pref";
     private static String hasuraSharedPrefUserId = "io.hasura.shared.pref.userId";
     private static String hasuraSharedPrefUserToken = "io.hasura.shared.pref.hasuraSharedPrefUserToken";
+    private static String hasuraSharedPrefLoginCheck = "io.hasura.shared.pref.hasuraSharedPrefLoginCheck";
     public static void init(Context mContext,String authUrl,String dbUrl) {
         context = mContext;
         okHttpBuilder = buildOkHttpClientBuilder();
@@ -58,6 +59,21 @@ public class Hasura {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(hasuraSharedPrefUserToken,userToken);
         prefsWriter.commit();
+    }
+    public static void setLogin() {
+        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
+        prefsWriter.putBoolean(hasuraSharedPrefLoginCheck,true);
+        prefsWriter.commit();
+    }
+
+    public static void clearLogin() {
+        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
+        prefsWriter.putBoolean(hasuraSharedPrefLoginCheck,false);
+        prefsWriter.commit();
+    }
+
+    public static boolean isLoggedIn() {
+        return cookiePrefs.getBoolean(hasuraSharedPrefLoginCheck,false);
     }
 
     public static String getUserToken() {
@@ -95,8 +111,9 @@ public class Hasura {
         return db;
     }
 
-    public static void clearCookies() {
+    public static void clearSession() {
         setUserToken("");
+        clearLogin();
         new PersistentCookieStore(context).removeAll();
     }
 

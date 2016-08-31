@@ -1,4 +1,4 @@
-package com.elite.todo_sdk_test;
+package io.hasura.todo_sdk_test;
 
 import android.app.Activity;
 import android.content.Intent;

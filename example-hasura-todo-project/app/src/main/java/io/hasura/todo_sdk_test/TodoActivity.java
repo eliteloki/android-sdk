@@ -1,4 +1,4 @@
-package com.elite.todo_sdk_test;
+package io.hasura.todo_sdk_test;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -32,6 +32,8 @@ import io.hasura.db.UpdateResult;
 import io.hasura.nonslip53.data.Tables;
 import io.hasura.nonslip53.data.tables.records.TaskRecord;
 import io.hasura.nonslip53.data.Tables.*;
+import io.hasura.todo_sdk_test.LoginActivity;
+import io.hasura.todo_sdk_test.TaskAdapter;
 
 public class TodoActivity extends Activity implements OnItemClickListener {
 
