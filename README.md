@@ -92,7 +92,7 @@ project.name=nonslip53
 admin.token=twoncmyxbxuywl917s9sbyby32v6nk0q
 ```
 
-<img src="https://raw.githubusercontent.com/hasura/android-sdk/master/docs/Screen%20Shot%202016-09-01%20at%201.53.45%20PM.png?raw=true" align="left" height="300" width="800" /><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<img src="https://raw.githubusercontent.com/hasura/android-sdk/master/docs/Screen%20Shot%202016-09-01%20at%201.53.45%20PM.png?raw=true" align="left" height="300" width="600" /><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 You can get the project name and admin token from Hasura web console.
 We have added `nonslip53` project for demo purpose, you can also include you project name and admin token.
 
@@ -185,12 +185,12 @@ Where the first argument is the Application Context. Second is the Auth url  fol
 
 #### How to get DB url
 
-<img src="https://github.com/hasura/android-sdk/blob/master/docs/Screen%20Shot%202016-09-01%20at%204.42.54%20PM.png?raw=true" align="left" height="300" width="800" /><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<img src="https://github.com/hasura/android-sdk/blob/master/docs/Screen%20Shot%202016-09-01%20at%204.42.54%20PM.png?raw=true" align="left" height="300" width="600" /><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 #### How to get Auth url
 
 
-<img src="https://github.com/hasura/android-sdk/blob/master/docs/Screen%20Shot%202016-09-01%20at%204.43.06%20PM.png?raw=true" align="left" height="300" width="800" /><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<img src="https://github.com/hasura/android-sdk/blob/master/docs/Screen%20Shot%202016-09-01%20at%204.43.06%20PM.png?raw=true" align="left" height="300" width="600" /><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
 
 Your Hasura android-sdk integration is now complete.
 Run the application now.
