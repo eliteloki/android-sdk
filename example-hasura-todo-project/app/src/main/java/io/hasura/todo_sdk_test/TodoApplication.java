@@ -18,6 +18,9 @@ public class TodoApplication extends Application {
          * @argument2 Auth url from hasura console
          * @argument3 DB url from hasura console
          */
-        Hasura.init(getApplicationContext(),"https://auth.nonslip53.hasura-app.io","https://data.nonslip53.hasura-app.io/api/1");
+        String projectName = "nonslip53";
+        String authUrl = "https://auth." + projectName + ".hasura-app.io";
+        String dbUrl = "https://data." + projectName + ".hasura-app.io/api/1";
+        Hasura.init(getApplicationContext(), authUrl, dbUrl);
     }
 }
