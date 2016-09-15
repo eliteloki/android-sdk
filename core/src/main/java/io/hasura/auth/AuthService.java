@@ -120,6 +120,20 @@ public class AuthService {
     }
 
     /**
+     * OTP Signup or register a new user
+     *
+     * @param r a {@link RegisterRequest} type
+     * @return  the {@link RegisterResponse}
+     * @throws AuthException
+     */
+    public RegisterCall<RegisterResponse, AuthException> otpSignUp(RegisterRequest r) {
+        String jsonBody = gson.toJson(r);
+        Type respType = new TypeToken<RegisterResponse>() {
+        }.getType();
+        return mkRegisterCall("/otp-signup", jsonBody, respType);
+    }
+
+    /**
      * Login an existing user
      *
      * Login an existing user by creating a {@link LoginRequest} class
@@ -133,6 +147,21 @@ public class AuthService {
         Type respType = new TypeToken<LoginResponse>() {
         }.getType();
         return mkLoginCall("/login", jsonBody, respType);
+    }
+    /**
+     * Login an existing user
+     *
+     * Login an existing user by creating a {@link LoginRequest} class
+     *
+     * @param r {@link LoginRequest} type
+     * @return  the {@link LoginResponse}
+     * @throws AuthException
+     */
+    public LoginCall<LoginResponse, AuthException> otpLogin(OTPLoginRequest r) {
+        String jsonBody = gson.toJson(r);
+        Type respType = new TypeToken<LoginResponse>() {
+        }.getType();
+        return mkLoginCall("/otp-login", jsonBody, respType);
     }
 
     /**
@@ -386,4 +415,6 @@ public class AuthService {
         }.getType();
         return mkGetCall(url, respType);
     }
+
+
 }

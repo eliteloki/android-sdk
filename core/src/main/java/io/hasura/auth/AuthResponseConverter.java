@@ -63,16 +63,11 @@ public class AuthResponseConverter<T> implements Converter<T, AuthException> {
     }
 
     static class AuthErrorResponse {
-        private int code;
-        private String error_code;
+        private String errorCode;
         private String message;
 
         public String getErrorCode() {
-            return error_code;
-        }
-
-        public int getCode() {
-            return this.code;
+            return errorCode;
         }
 
         public String getMessage() {
