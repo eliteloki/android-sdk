@@ -149,11 +149,11 @@ public class AuthService {
         return mkLoginCall("/login", jsonBody, respType);
     }
     /**
-     * Login an existing user
+     * OTP Login an existing user
      *
-     * Login an existing user by creating a {@link LoginRequest} class
+     * Login an existing user by creating a {@link OTPLoginRequest} class
      *
-     * @param r {@link LoginRequest} type
+     * @param r {@link OTPLoginRequest} type
      * @return  the {@link LoginResponse}
      * @throws AuthException
      */
