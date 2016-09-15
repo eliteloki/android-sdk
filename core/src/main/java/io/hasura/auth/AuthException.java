@@ -38,8 +38,6 @@ public class AuthException extends Exception {
         return code;
     }
 
-
-
     /**
      * Access the error-code for this error.
      *
