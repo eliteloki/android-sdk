@@ -33,6 +33,7 @@ public class Hasura {
     private static String hasuraSharedPref = "io.hasura.shared.pref";
     private static String hasuraSharedPrefUserId = "io.hasura.shared.pref.userId";
     private static String hasuraSharedPrefUserToken = "io.hasura.shared.pref.hasuraSharedPrefUserToken";
+    private static String hasuraSharedPrefRequestType = "io.hasura.shared.pref.hasuraSharedPrefRequestType";
     private static String hasuraSharedPrefLoginCheck = "io.hasura.shared.pref.hasuraSharedPrefLoginCheck";
     public static void init(Context mContext,String authUrl,String dbUrl) {
         context = mContext;
@@ -55,6 +56,12 @@ public class Hasura {
         prefsWriter.commit();
     }
 
+    public static void setRequestType(boolean requestType){
+        SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
+        prefsWriter.putBoolean(hasuraSharedPrefRequestType,requestType);
+        prefsWriter.commit();
+    }
+
     public static void setUserToken(String userToken) {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(hasuraSharedPrefUserToken,userToken);
@@ -74,6 +81,9 @@ public class Hasura {
 
     public static boolean isLoggedIn() {
         return cookiePrefs.getBoolean(hasuraSharedPrefLoginCheck,false);
+    }
+    public static boolean getRequestType() {
+        return cookiePrefs.getBoolean(hasuraSharedPrefRequestType,false);
     }
 
     public static String getUserToken() {

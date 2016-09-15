@@ -20,9 +20,15 @@ public class HasuraTokenInterceptor implements Interceptor {
         Request request = chain.request();
         Response response;
         Log.d("{{HASURA INTERCEPTOR", request.headers().toString());
-        Request newRequest = request.newBuilder()
-                .addHeader("Authorization", "Bearer "+ Hasura.getUserToken())
-                .build();
+        Request newRequest = null;
+        if(Hasura.getRequestType()) {
+            newRequest = request.newBuilder()
+                    .addHeader("Authorization", "Bearer " + Hasura.getUserToken())
+                    .build();
+        }else {
+            newRequest = request.newBuilder()
+                    .build();
+        }
         Log.d("{{HASURA INTERCEPTOR", newRequest.headers().toString());
         response = chain.proceed(newRequest);
         return response;

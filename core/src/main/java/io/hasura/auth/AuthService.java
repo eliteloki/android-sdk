@@ -9,6 +9,7 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 
 import io.hasura.core.Call;
+import io.hasura.core.Hasura;
 import io.hasura.core.LoginCall;
 import io.hasura.core.LogoutCall;
 import io.hasura.core.RegisterCall;
@@ -63,6 +64,7 @@ public class AuthService {
 
     private <T> RegisterCall<T, AuthException> mkRegisterCall(String url, String jsonBody, Type bodyType) {
         RequestBody reqBody = RequestBody.create(JSON, jsonBody);
+        Hasura.setRequestType(false);
         Request request = new Request.Builder()
                 .url(this.authUrl + url)
                 .post(reqBody)
@@ -74,6 +76,7 @@ public class AuthService {
     }
     private <T> LoginCall<T, AuthException> mkLoginCall(String url, String jsonBody, Type bodyType) {
         RequestBody reqBody = RequestBody.create(JSON, jsonBody);
+        Hasura.setRequestType(false);
         Request request = new Request.Builder()
                 .url(this.authUrl + url)
                 .post(reqBody)
@@ -113,6 +116,7 @@ public class AuthService {
      */
     public RegisterCall<RegisterResponse, AuthException> register(RegisterRequest r) {
         String jsonBody = gson.toJson(r);
+        Hasura.setRequestType(false);
         Type respType = new TypeToken<RegisterResponse>() {
         }.getType();
         return mkRegisterCall("/signup", jsonBody, respType);
@@ -127,6 +131,7 @@ public class AuthService {
      */
     public RegisterCall<RegisterResponse, AuthException> otpSignUp(RegisterRequest r) {
         String jsonBody = gson.toJson(r);
+        Hasura.setRequestType(false);
         Type respType = new TypeToken<RegisterResponse>() {
         }.getType();
         return mkRegisterCall("/otp-signup", jsonBody, respType);
@@ -143,6 +148,7 @@ public class AuthService {
      */
     public LoginCall<LoginResponse, AuthException> login(LoginRequest r) {
         String jsonBody = gson.toJson(r);
+        Hasura.setRequestType(false);
         Type respType = new TypeToken<LoginResponse>() {
         }.getType();
         return mkLoginCall("/login", jsonBody, respType);
@@ -158,6 +164,7 @@ public class AuthService {
      */
     public LoginCall<LoginResponse, AuthException> otpLogin(LoginRequestOtp r) {
         String jsonBody = gson.toJson(r);
+        Hasura.setRequestType(false);
         Type respType = new TypeToken<LoginResponse>() {
         }.getType();
         return mkLoginCall("/otp-login", jsonBody, respType);
