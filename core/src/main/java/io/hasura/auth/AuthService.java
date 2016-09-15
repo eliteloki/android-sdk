@@ -9,7 +9,6 @@ import java.net.CookieManager;
 import java.net.CookiePolicy;
 
 import io.hasura.core.Call;
-import io.hasura.core.Hasura;
 import io.hasura.core.LoginCall;
 import io.hasura.core.LogoutCall;
 import io.hasura.core.RegisterCall;
@@ -151,13 +150,13 @@ public class AuthService {
     /**
      * OTP Login an existing user
      *
-     * Login an existing user by creating a {@link OTPLoginRequest} class
+     * Login an existing user by creating a {@link LoginRequestOtp} class
      *
-     * @param r {@link OTPLoginRequest} type
+     * @param r {@link LoginRequestOtp} type
      * @return  the {@link LoginResponse}
      * @throws AuthException
      */
-    public LoginCall<LoginResponse, AuthException> otpLogin(OTPLoginRequest r) {
+    public LoginCall<LoginResponse, AuthException> otpLogin(LoginRequestOtp r) {
         String jsonBody = gson.toJson(r);
         Type respType = new TypeToken<LoginResponse>() {
         }.getType();
