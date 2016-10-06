@@ -1,5 +1,6 @@
 package io.hasura.auth;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
 public class LoginRequest {
@@ -19,6 +20,12 @@ public class LoginRequest {
     public LoginRequest(String userName, String password) {
         this.userName = userName;
         this.password = password;
+    }
+    @SerializedName("info")
+    JsonObject info;
+
+    public void setInfo(JsonObject info) {
+        this.info = info;
     }
 
     public void setUsername(String username) {

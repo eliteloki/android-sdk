@@ -3,7 +3,9 @@ package io.hasura.auth;
 import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-public class RegisterRequest {
+import java.io.Serializable;
+
+public class RegisterRequest implements Serializable{
     @SerializedName("username")
     String username;
 
@@ -37,5 +39,25 @@ public class RegisterRequest {
 
     public void setInfo(JsonObject info) {
         this.info = info;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public JsonObject getInfo() {
+        return info;
     }
 }
