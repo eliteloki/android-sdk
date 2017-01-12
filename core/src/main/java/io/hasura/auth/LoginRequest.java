@@ -17,10 +17,14 @@ public class LoginRequest {
     @SerializedName("mobile")
     String mobile;
 
+    public LoginRequest() {
+    }
+
     public LoginRequest(String userName, String password) {
         this.userName = userName;
         this.password = password;
     }
+
     @SerializedName("info")
     JsonObject info;
 

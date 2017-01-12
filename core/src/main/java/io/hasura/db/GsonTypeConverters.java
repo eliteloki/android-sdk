@@ -14,6 +14,7 @@ import java.sql.Time;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 public class GsonTypeConverters {
 
@@ -32,7 +33,7 @@ public class GsonTypeConverters {
             }
         };
 
-    private final static SimpleDateFormat tsFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ");
+    private final static SimpleDateFormat tsFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSSSSZ", Locale.getDefault());
 
     public final static JsonSerializer<Timestamp> tsJsonSerializer = new JsonSerializer<Timestamp>() {
         @Override
@@ -57,7 +58,7 @@ public class GsonTypeConverters {
         }
     };
 
-    private final static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSSSSSZ");
+    private final static SimpleDateFormat timeFormat = new SimpleDateFormat("HH:mm:ss.SSSSSSZ", Locale.getDefault());
 
     public final static JsonSerializer<Time> timeJsonSerializer = new JsonSerializer<Time>() {
         @Override

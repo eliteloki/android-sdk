@@ -1,19 +1,10 @@
 package io.hasura.core;
 
-import android.app.Activity;
-import android.app.FragmentManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.text.TextUtils;
-
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 
 import io.hasura.auth.AuthService;
-import io.hasura.core.LoggingInterceptor;
-import io.hasura.core.PersistentCookieStore;
 import io.hasura.db.DBService;
-import okhttp3.JavaNetCookieJar;
 import okhttp3.OkHttpClient;
 
 /**
@@ -30,20 +21,14 @@ public class Hasura {
     private static OkHttpClient okHttpClient;
     private static OkHttpClient.Builder okHttpBuilder;
     private static SharedPreferences cookiePrefs;
+    private static Environment mEnvironment;
     private static String hasuraSharedPref = "io.hasura.shared.pref";
     private static String hasuraSharedPrefUserId = "io.hasura.shared.pref.userId";
     private static String hasuraSharedPrefUserToken = "io.hasura.shared.pref.hasuraSharedPrefUserToken";
     private static String hasuraSharedPrefRequestType = "io.hasura.shared.pref.hasuraSharedPrefRequestType";
     private static String hasuraSharedPrefLoginCheck = "io.hasura.shared.pref.hasuraSharedPrefLoginCheck";
-    public static void init(Context mContext,String authUrl,String dbUrl) {
-        context = mContext;
-        okHttpBuilder = buildOkHttpClientBuilder();
-        okHttpClient = okHttpBuilder.build();
-        cookiePrefs = context.getSharedPreferences(hasuraSharedPref, Context.MODE_PRIVATE);
-        sAuthUrl = authUrl;
-        sDBUrl = dbUrl;
-        auth = getAuth();
-        db = getDB();
+
+    private Hasura() {
     }
 
     public static Integer getUserId() {
@@ -53,30 +38,30 @@ public class Hasura {
     public static void setUserId(Integer userId) {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putInt(hasuraSharedPrefUserId,userId);
-        prefsWriter.commit();
+        prefsWriter.apply();
     }
 
     public static void setRequestType(boolean requestType){
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putBoolean(hasuraSharedPrefRequestType,requestType);
-        prefsWriter.commit();
+        prefsWriter.apply();
     }
 
     public static void setUserToken(String userToken) {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putString(hasuraSharedPrefUserToken,userToken);
-        prefsWriter.commit();
+        prefsWriter.apply();
     }
     public static void setLogin() {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putBoolean(hasuraSharedPrefLoginCheck,true);
-        prefsWriter.commit();
+        prefsWriter.apply();
     }
 
     public static void clearLogin() {
         SharedPreferences.Editor prefsWriter = cookiePrefs.edit();
         prefsWriter.putBoolean(hasuraSharedPrefLoginCheck,false);
-        prefsWriter.commit();
+        prefsWriter.apply();
     }
 
     public static boolean isLoggedIn() {
@@ -99,11 +84,15 @@ public class Hasura {
     }
 
     public static OkHttpClient.Builder buildOkHttpClientBuilder() {
-        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okHttpClientBuilder.addInterceptor(new HasuraTokenInterceptor());
+        if(Environment.DEV == mEnvironment){
+            okHttpClientBuilder.addInterceptor(new LoggingInterceptor());
+        } else if(Environment.PROD == mEnvironment){
+
+        }
 //                .cookieJar(new JavaNetCookieJar(new CookieManager(
 //                        new PersistentCookieStore(context), CookiePolicy.ACCEPT_ALL)))
-                .addInterceptor(new HasuraTokenInterceptor())
-                .addInterceptor(new LoggingInterceptor());
         return okHttpClientBuilder;
     }
 
@@ -149,6 +138,64 @@ public class Hasura {
         return auth;
     }
 
+    public static IEnvironment context(Context context) {
+        return new Hasura.Builder(context);
+    }
 
+    public interface IEnvironment  {
+        IAuthUrl environment(Environment environment);
+    }
+    public interface IAuthUrl{
+        IDBUrl authUrl(String authUrl);
+    }
+    public interface IDBUrl {
+        IBuild dbUrl(String dbUrl);
+    }
+    public interface IBuild {
+        Hasura build();
+    }
+
+
+    private static class Builder implements IEnvironment,IDBUrl,IAuthUrl,IBuild{
+        private static Hasura instance = new Hasura();
+
+        public Builder(Context context) {
+            instance.context = context;
+        }
+
+        public Builder context(Context context) {
+            instance.context = context;
+            return this;
+        }
+
+        @Override
+        public IAuthUrl environment(Environment environment) {
+            instance.mEnvironment = environment;
+            return this;
+        }
+
+        @Override
+        public IDBUrl authUrl(String authUrl) {
+            instance.sAuthUrl = authUrl;
+            return this;
+        }
+
+        @Override
+        public IBuild dbUrl(String dbUrl) {
+            instance.sDBUrl = dbUrl;
+            return this;
+        }
+
+        @Override
+        public Hasura build() {
+            instance.okHttpBuilder = buildOkHttpClientBuilder();
+            instance.okHttpClient = instance.okHttpBuilder.build();
+            instance.cookiePrefs = instance.context.getSharedPreferences(hasuraSharedPref, Context.MODE_PRIVATE);
+            instance.auth = getAuth();
+            instance.db = getDB();
+            return instance;
+        }
+
+    }
 
 }

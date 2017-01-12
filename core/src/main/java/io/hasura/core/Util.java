@@ -13,7 +13,6 @@ public class Util {
         int code = response.code();
         try {
             String rawBody = response.body().string();
-            System.out.println(rawBody);
             return gson.fromJson(rawBody, bodyType);
         } catch (JsonSyntaxException e) {
             String msg

@@ -19,7 +19,6 @@ public class HasuraTokenInterceptor implements Interceptor {
     public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         Response response;
-        Log.d("{{HASURA INTERCEPTOR", request.headers().toString());
         Request newRequest = null;
         if(Hasura.getRequestType() && !Hasura.getUserToken().equals("")) {
             newRequest = request.newBuilder()
@@ -29,7 +28,6 @@ public class HasuraTokenInterceptor implements Interceptor {
             newRequest = request.newBuilder()
                     .build();
         }
-        Log.d("{{HASURA INTERCEPTOR", newRequest.headers().toString());
         response = chain.proceed(newRequest);
         return response;
     }
