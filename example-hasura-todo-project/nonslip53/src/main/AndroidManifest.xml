@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="io.hasura.nonslip53.data">
 
-    <application android:allowBackup="true"
+    <application
                  android:supportsRtl="true">
     </application>
 
